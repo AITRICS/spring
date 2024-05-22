@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -20,14 +21,15 @@ public class PlaneFinderService {
     private final ObjectMapper om;
 
     @SneakyThrows
-    public PlaneFinderService(PlaneRepository repo, FlightGenerator generator) {
+    public PlaneFinderService(PlaneRepository repo, FlightGenerator generator,
+                              @Value("${plane.finder.url}") String acUrlStr) {
         this.repo = repo;
         this.generator = generator;
 
-        acURL = new URL("http://192.168.1.139/ajax/aircraft");
+        acURL = new URL(acUrlStr);
         om = new ObjectMapper();
     }
-
+    
     public Iterable<Aircraft> getAircraft() throws IOException {
         List<Aircraft> positions = new ArrayList<>();
 
